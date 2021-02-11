@@ -2,7 +2,11 @@ package com.github.TeilzeitTodesengel.BladeKiller.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
 
@@ -14,10 +18,18 @@ public class GameScreen extends AbstractScreen {
 
 	private final Body player;
 
+	private final AssetManager assetManager;
+	private final OrthographicCamera gameCamera;
 
+	private final OrthogonalTiledMapRenderer mapRenderer;
 
 	public GameScreen(final GameCore context) {
 		 super(context);
+
+		 assetManager = context.getAssetManager();
+		 gameCamera = context.getGameCamera();
+
+		 mapRenderer = new OrthogonalTiledMapRenderer(null,UNIT_SCALE , context.getSpriteBatch());
 
 		 bodyDef = new BodyDef();
 		 fixtureDef = new FixtureDef();
@@ -63,6 +75,7 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void show() {
+		mapRenderer.setMap(assetManager.get("Map.tmx", TiledMap.class));
 
 	}
 
@@ -93,12 +106,14 @@ public class GameScreen extends AbstractScreen {
 		player.applyLinearImpulse(
 				(speedX - player.getLinearVelocity().x) * player.getMass(),
 				(speedY - player.getLinearVelocity().y) * player.getMass(),
-				player.getWorldCenter().x + 0.5f,
-				player.getWorldCenter().y + 0.5f,
+				player.getWorldCenter().x,
+				player.getWorldCenter().y,
 				true
 		);
 
 		viewport.apply(true);
+		mapRenderer.setView(gameCamera);
+		mapRenderer.render();
 		box2DDebugRenderer.render(world, viewport.getCamera().combined);
 
 	}
@@ -125,6 +140,7 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void dispose() {
+		mapRenderer.dispose();
 
 	}
 }
