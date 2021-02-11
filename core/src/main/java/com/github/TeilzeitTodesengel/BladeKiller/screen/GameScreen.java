@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.*;
@@ -23,11 +24,16 @@ public class GameScreen extends AbstractScreen {
 
 	private final OrthogonalTiledMapRenderer mapRenderer;
 
+	private final GLProfiler profiler;
+
 	public GameScreen(final GameCore context) {
 		 super(context);
 
 		 assetManager = context.getAssetManager();
 		 gameCamera = context.getGameCamera();
+
+		 profiler = new GLProfiler(Gdx.graphics);
+		 profiler.enable();
 
 		 mapRenderer = new OrthogonalTiledMapRenderer(null,UNIT_SCALE , context.getSpriteBatch());
 
@@ -110,6 +116,10 @@ public class GameScreen extends AbstractScreen {
 				player.getWorldCenter().y,
 				true
 		);
+
+		// Gdx.app.debug("RenderInfo", "Bindings: " + profiler.getTextureBindings());
+		// Gdx.app.debug("RenderInfo", "DrawCalls: " + profiler.getDrawCalls());
+		// profiler.reset();
 
 		viewport.apply(true);
 		mapRenderer.setView(gameCamera);

@@ -137,6 +137,7 @@ public class GameCore extends Game {
 		box2DDebugRenderer.dispose();
 		world.dispose();
 		assetManager.dispose();
+		spriteBatch.dispose();
 	}
 
 
