@@ -1,0 +1,3 @@
+console command
+
+gradlew lwjgl3:jar
