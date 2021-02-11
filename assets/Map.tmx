@@ -184,7 +184,7 @@
    eJztwTEBAAAAwqD1T20MH6AAAAAAAAAAAAAAAAAAAACAtwFAAAAB
   </data>
  </layer>
- <objectgroup id="9" name="collisoin">
+ <objectgroup id="9" name="collision">
   <object id="5" x="64" y="783.75">
    <polyline points="0,0 -48.25,0 -47.75,224.5 63.75,224.25 64,0.5 16,0.25"/>
   </object>

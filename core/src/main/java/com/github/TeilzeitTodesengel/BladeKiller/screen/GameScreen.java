@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
+import com.github.TeilzeitTodesengel.BladeKiller.map.CollisionArea;
+import com.github.TeilzeitTodesengel.BladeKiller.map.Map;
 
 import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.*;
 
@@ -25,6 +27,8 @@ public class GameScreen extends AbstractScreen {
 	private final OrthogonalTiledMapRenderer mapRenderer;
 
 	private final GLProfiler profiler;
+
+	private Map map;
 
 	public GameScreen(final GameCore context) {
 		 super(context);
@@ -59,29 +63,56 @@ public class GameScreen extends AbstractScreen {
 		pShape.dispose();
 
 
-		// create a box
-		bodyDef.position.set(0, 0);
+
+
+		final TiledMap tiledMap = assetManager.get("Map.tmx", TiledMap.class);
+		mapRenderer.setMap(assetManager.get("Map.tmx", TiledMap.class));
+		map = new Map(tiledMap);
+
+		spawnCollisionAreas();
+
+	}
+
+	private void resetBodyAndFixtureDefinition() {
+		bodyDef.position.set(0,0);
 		bodyDef.gravityScale = 1;
 		bodyDef.type = BodyDef.BodyType.StaticBody;
-		final Body body = world.createBody(bodyDef);
-		body.setUserData("Box");
+		bodyDef.fixedRotation = false;
 
+		fixtureDef.density = 0;
 		fixtureDef.isSensor = false;
-		fixtureDef.restitution = 0.75f;
+		fixtureDef.restitution = 0;
 		fixtureDef.friction = 0.2f;
-		fixtureDef.filter.categoryBits = BIT_GROUND;
-		fixtureDef.filter.maskBits = BIT_PLAYER;
-		final ChainShape chainShape = new ChainShape();
-		chainShape.createLoop(new float[] {1, 1, 1, 15, 8, 15, 8, 1});
-		fixtureDef.shape = chainShape;
-		body.createFixture(fixtureDef);
-		chainShape.dispose();
+		fixtureDef.filter.categoryBits = 0x0001;
+		fixtureDef.filter.maskBits = -1;
+		fixtureDef.shape = null;
+	}
 
+	private void spawnCollisionAreas() {
+		for (final CollisionArea collisionArea : map.getCollisionAreas()) {
+			resetBodyAndFixtureDefinition();
+
+			// create room
+			bodyDef.position.set(collisionArea.getX(), collisionArea.getY());
+			bodyDef.fixedRotation = true;
+			final Body body = world.createBody(bodyDef);
+			body.setUserData("GROUND");
+
+
+			fixtureDef.filter.categoryBits = BIT_GROUND;
+			fixtureDef.filter.maskBits = -1;
+			final ChainShape chainShape = new ChainShape();
+			chainShape.createChain(collisionArea.getVertices());
+			fixtureDef.shape = chainShape;
+			body.createFixture(fixtureDef);
+			chainShape.dispose();
+
+		}
 	}
 
 	@Override
 	public void show() {
-		mapRenderer.setMap(assetManager.get("Map.tmx", TiledMap.class));
+
 
 	}
 

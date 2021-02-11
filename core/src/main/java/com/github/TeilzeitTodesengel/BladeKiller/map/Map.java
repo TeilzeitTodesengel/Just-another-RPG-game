@@ -15,11 +15,11 @@ public class Map {
 	private static final String TAG = Map.class.getSimpleName();
 
 	private final TiledMap tiledMap;
-	private final Array<CollisionArea> colisionAreas;
+	private final Array<CollisionArea> collisionAreas;
 
 	public Map(TiledMap tiledMap) {
 		this.tiledMap = tiledMap;
-		colisionAreas = new Array<CollisionArea>();
+		collisionAreas = new Array<CollisionArea>();
 
 		parseCollisionLayer();
 	}
@@ -57,16 +57,20 @@ public class Map {
 				// left bottom
 				rectVertices[8] = 0;
 				rectVertices[9] = 0;
-				colisionAreas.add(new CollisionArea(rectangle.x, rectangle.y, rectVertices));
+				collisionAreas.add(new CollisionArea(rectangle.x, rectangle.y, rectVertices));
 
 			} else if (mapObj instanceof PolylineMapObject){
 				final PolylineMapObject polylineMapObject = (PolylineMapObject) mapObj;
 				final Polyline polyline = polylineMapObject.getPolyline();
-				colisionAreas.add(new CollisionArea(polyline.getX(), polyline.getY(), polyline.getVertices()));
+				collisionAreas.add(new CollisionArea(polyline.getX(), polyline.getY(), polyline.getVertices()));
 
 			} else {
 				Gdx.app.debug(TAG, "MapObject of type " + mapObj + "is not supported for Collision Layer.");
 			}
 		}
+	}
+
+	public Array<CollisionArea> getCollisionAreas() {
+		return collisionAreas;
 	}
 }

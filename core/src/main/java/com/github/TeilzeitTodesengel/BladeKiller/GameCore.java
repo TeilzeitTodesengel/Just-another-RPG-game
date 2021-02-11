@@ -96,7 +96,7 @@ public class GameCore extends Game {
 				screenCache.put(screenType, newScreen);
 				setScreen(newScreen);
 			} catch (ReflectionException e) {
-				throw  new GdxRuntimeException("Scree" + screenType + "could not be created.");
+				throw  new GdxRuntimeException("Screen: " + screenType + "could not be created.");
 			}
 		} else {
 			Gdx.app.debug(TAG, "Switching to screen: " + screenType);
