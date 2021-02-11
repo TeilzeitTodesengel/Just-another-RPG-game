@@ -1,0 +1,55 @@
+
+map.png
+size: 2048, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Inner
+  rotate: false
+  xy: 2, 2
+  size: 640, 400
+  orig: 640, 400
+  offset: 0, 0
+  index: -1
+NPC_test
+  rotate: false
+  xy: 1174, 450
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+Overworld
+  rotate: false
+  xy: 2, 404
+  size: 640, 576
+  orig: 640, 576
+  offset: 0, 0
+  index: -1
+cave
+  rotate: false
+  xy: 644, 580
+  size: 640, 400
+  orig: 640, 400
+  offset: 0, 0
+  index: -1
+character
+  rotate: false
+  xy: 1286, 724
+  size: 272, 256
+  orig: 272, 256
+  offset: 0, 0
+  index: -1
+log
+  rotate: false
+  xy: 644, 128
+  size: 192, 128
+  orig: 192, 128
+  offset: 0, 0
+  index: -1
+objects
+  rotate: false
+  xy: 644, 258
+  size: 528, 320
+  orig: 528, 320
+  offset: 0, 0
+  index: -1

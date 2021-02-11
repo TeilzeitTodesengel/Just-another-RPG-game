@@ -1,0 +1,13 @@
+
+map.png
+size: 1024, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Overworld
+  rotate: false
+  xy: 2, 2
+  size: 640, 576
+  orig: 640, 576
+  offset: 0, 0
+  index: -1
