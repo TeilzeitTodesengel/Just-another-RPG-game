@@ -7,7 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
@@ -67,6 +69,8 @@ public class GameCore extends Game {
 	    assetManager = new AssetManager();
 	    assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
 
+	    initializeSkin();
+
 		screenViewport = new FitViewport(9,16, gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		setScreen(ScreenType.LOADING);
@@ -114,6 +118,22 @@ public class GameCore extends Game {
 
 	public OrthographicCamera getGameCamera() {
 		return gameCamera;
+	}
+
+	private void initializeSkin() {
+ 		// generate ttf bitmap
+		final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ui/font.ttf"));
+		final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		fontParameter.minFilter = Texture.TextureFilter.Linear;
+		fontParameter.magFilter = Texture.TextureFilter.Linear;
+		final int[] sizesToCreate = {16,20,26,32};
+		for (int size : sizesToCreate) {
+			fontParameter.size = size;
+			fontGenerator.generateFont(fontParameter);
+		}
+		fontGenerator.dispose();
+
+		// load skin
 	}
 
 	@Override

@@ -9,19 +9,25 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.UNIT_SCALE;
 
 public class Map {
 	private static final String TAG = Map.class.getSimpleName();
 
 	private final TiledMap tiledMap;
 	private final Array<CollisionArea> collisionAreas;
+	private final Vector2 startLocation;
 
 	public Map(TiledMap tiledMap) {
 		this.tiledMap = tiledMap;
 		collisionAreas = new Array<CollisionArea>();
 
 		parseCollisionLayer();
+		startLocation = new Vector2();
+		parsePlayerStartLocation();
 	}
 
 	private void parseCollisionLayer() {
@@ -70,7 +76,29 @@ public class Map {
 		}
 	}
 
+	private void parsePlayerStartLocation() {
+		final MapLayer startLocationLayer = tiledMap.getLayers().get("PlayerStartLocation");
+		if (startLocationLayer == null) {
+			Gdx.app.debug(TAG, "There is no startlocation layer");
+			return;
+		}
+
+		final MapObjects objects = startLocationLayer.getObjects();
+		for (final MapObject mapObj : objects) {
+			if (mapObj instanceof RectangleMapObject) {
+				final RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObj;
+				final Rectangle rectangle = rectangleMapObject.getRectangle();
+				startLocation.set(rectangle.x * UNIT_SCALE, rectangle.getY() * UNIT_SCALE);
+			}
+		}
+
+	}
+
 	public Array<CollisionArea> getCollisionAreas() {
 		return collisionAreas;
+	}
+
+	public Vector2 getStartLocation() {
+		return startLocation;
 	}
 }

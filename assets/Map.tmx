@@ -176,7 +176,7 @@
  </layer>
  <layer id="2" name="background 1" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt17ENwjAQRmHba8AWXoFxWACYBiiBDbwAUALDQMWhEMU6kiBK7t4nXZO/eo2lhAAAAAAAAAAAAAAAAAAAAAAA/2EafztrvPfP4vebG+7fpRAO73uk5tu9+raXmxjuv6XhrcRm99rf7l76S9WXU7d76H+1l54+L/1ju6f+nD53D/154B3w0q95e//Gdvpt9+s3T+/W+1sLuaXcSu1e+tdyG7mt2r30H+VOcme1W+6/VP+6fXc13v8EKmU5nw==
+   eJzt17ENwjAQRmHba8AWXoFxWCAwDVACG3gBoASGgYqLQhTLskGU3L1P+ptc9Qos4RwAAAAAAAAAAAAAAAAAAAAA/Ie5/23aWO9f+O9bKu7fB+eO7z3D8O2RfTvIZor776F9S364W+0f71b6U9YXw3S30N+3p0qflf5erPwWLPW37hb6Y+MdsNJfsvb+fbrTr7u/9u7nd+39o062kq2Lu5X+jWwr2xV3K/0n2Vl2Ke6a+6/Zf93absr7X2A5OZ8=
   </data>
  </layer>
  <layer id="4" name="foreground" width="64" height="64">
@@ -186,17 +186,17 @@
  </layer>
  <objectgroup id="9" name="collision">
   <object id="5" x="64" y="783.75">
-   <polyline points="0,0 -48.25,0 -47.75,224.5 63.75,224.25 64,0.5 16,0.25"/>
+   <polyline points="-5.18182,0.0909091 -48.25,0 -47.75,224.5 63.75,224.25 64,0.5 21.2727,0.0681818"/>
   </object>
   <object id="6" x="95.6667" y="816.333" width="16.1515" height="15.3333"/>
-  <object id="7" x="64" y="863.988" width="15.9486" height="15.9249"/>
+  <object id="7" x="48.25" y="847.738" width="15.9486" height="15.9249"/>
   <object id="8" x="32.2075" y="879.856" width="15.9486" height="15.9249"/>
   <object id="9" x="96.0257" y="895.856" width="15.9486" height="15.9249"/>
   <object id="10" x="16.0257" y="944.038" width="15.9486" height="15.9249"/>
  </objectgroup>
  <objectgroup id="5" name="gameObjects"/>
  <objectgroup id="6" name="PlayerStartLocation">
-  <object id="1" x="72" y="988.5">
+  <object id="1" x="71.25" y="983">
    <point/>
   </object>
  </objectgroup>

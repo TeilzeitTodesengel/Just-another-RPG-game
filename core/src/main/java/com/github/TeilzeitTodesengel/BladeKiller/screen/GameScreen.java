@@ -19,7 +19,7 @@ public class GameScreen extends AbstractScreen {
 	private final BodyDef bodyDef;
 	private final FixtureDef fixtureDef;
 
-	private final Body player;
+	private Body player;
 
 	private final AssetManager assetManager;
 	private final OrthographicCamera gameCamera;
@@ -44,32 +44,13 @@ public class GameScreen extends AbstractScreen {
 		 bodyDef = new BodyDef();
 		 fixtureDef = new FixtureDef();
 
-		bodyDef.position.set(4.5f, 3);
-		bodyDef.gravityScale = 1;
-		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		player  = world.createBody(bodyDef);
-		player.setUserData("PLAYER");
-
-		fixtureDef.density = 1;
-		fixtureDef.isSensor = false;
-		fixtureDef.restitution = 0;
-		fixtureDef.friction = 0.2f;
-		fixtureDef.filter.categoryBits = BIT_PLAYER;
-		fixtureDef.filter.maskBits = BIT_GROUND;
-		final PolygonShape pShape = new PolygonShape();
-		pShape.setAsBox(0.5f, 0.5f);
-		fixtureDef.shape = pShape;
-		player.createFixture(fixtureDef);
-		pShape.dispose();
-
-
-
 
 		final TiledMap tiledMap = assetManager.get("Map.tmx", TiledMap.class);
 		mapRenderer.setMap(assetManager.get("Map.tmx", TiledMap.class));
 		map = new Map(tiledMap);
 
 		spawnCollisionAreas();
+		spawnPlayer();
 
 	}
 
@@ -108,6 +89,24 @@ public class GameScreen extends AbstractScreen {
 			chainShape.dispose();
 
 		}
+	}
+
+	private void spawnPlayer() {
+		resetBodyAndFixtureDefinition();
+		bodyDef.position.set(map.getStartLocation());
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		player  = world.createBody(bodyDef);
+		player.setUserData("PLAYER");
+
+
+		fixtureDef.filter.categoryBits = BIT_PLAYER;
+		fixtureDef.density = 1;
+		fixtureDef.filter.maskBits = BIT_GROUND;
+		final PolygonShape pShape = new PolygonShape();
+		pShape.setAsBox(0.5f, 0.5f);
+		fixtureDef.shape = pShape;
+		player.createFixture(fixtureDef);
+		pShape.dispose();
 	}
 
 	@Override
