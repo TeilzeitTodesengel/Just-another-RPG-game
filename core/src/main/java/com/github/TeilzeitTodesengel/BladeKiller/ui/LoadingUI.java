@@ -18,10 +18,10 @@ public class LoadingUI extends Table {
 		progressBar = new ProgressBar(0, 1, 1.01f, false, skin, "default");
 		progressBar.setAnimateDuration(1);
 
-		txtButton = new TextButton("Loading...", skin, "enormous");
+		txtButton = new TextButton("Loading...", skin, "fat");
 		txtButton.getLabel().setWrap(true);
 
-		pressAnyKeyButton = new TextButton("Press any key", skin, "enormous");
+		pressAnyKeyButton = new TextButton("Press any key", skin, "fat");
 		pressAnyKeyButton.getLabel().setWrap(true);
 		pressAnyKeyButton.setVisible(false);
 
