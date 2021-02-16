@@ -6,6 +6,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,7 +17,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -45,10 +49,12 @@ public class GameCore extends Game {
 	private Box2DDebugRenderer box2DDebugRenderer;
 
 	private float accumulator;
+	private static final float FIXED_TIME_STEP = 1 / 60f;
 
 	private AssetManager assetManager;
 
-	private static final float FIXED_TIME_STEP = 1 / 60f;
+	private Stage stage;
+	private Skin skin;
 
  	@Override
 	public void create() {
@@ -70,6 +76,7 @@ public class GameCore extends Game {
 	    assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
 
 	    initializeSkin();
+	    stage = new Stage(new FitViewport(450,800), spriteBatch);
 
 		screenViewport = new FitViewport(9,16, gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
@@ -100,7 +107,7 @@ public class GameCore extends Game {
 				screenCache.put(screenType, newScreen);
 				setScreen(newScreen);
 			} catch (ReflectionException e) {
-				throw  new GdxRuntimeException("Screen: " + screenType + "could not be created.");
+				throw  new GdxRuntimeException("Screen: " + screenType + " could not be created.");
 			}
 		} else {
 			Gdx.app.debug(TAG, "Switching to screen: " + screenType);
@@ -120,20 +127,34 @@ public class GameCore extends Game {
 		return gameCamera;
 	}
 
+	public Stage getStage() {
+		return stage;
+	}
+
+	public Skin getSkin() {
+		return skin;
+	}
+
 	private void initializeSkin() {
  		// generate ttf bitmap
+		final ObjectMap<String, Object> resources = new ObjectMap<String, Object>();
 		final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ui/font.ttf"));
 		final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		fontParameter.minFilter = Texture.TextureFilter.Linear;
 		fontParameter.magFilter = Texture.TextureFilter.Linear;
-		final int[] sizesToCreate = {16,20,26,32};
+		final int[] sizesToCreate = {16,20,26,32,64};
 		for (int size : sizesToCreate) {
 			fontParameter.size = size;
-			fontGenerator.generateFont(fontParameter);
+			resources.put("font_" + size, fontGenerator.generateFont(fontParameter));
 		}
 		fontGenerator.dispose();
 
 		// load skin
+		final SkinLoader.SkinParameter skinParameter = new SkinLoader.SkinParameter("ui/hud.atlas", resources);
+		assetManager.load("ui/hud.json", Skin.class, skinParameter);
+		assetManager.finishLoading();
+		skin = assetManager.get("ui/hud.json", Skin.class);
+
 	}
 
 	@Override
@@ -147,7 +168,10 @@ public class GameCore extends Game {
 			accumulator -= FIXED_TIME_STEP;
 		}
 
-		final float alpha = accumulator / FIXED_TIME_STEP;
+		//final float alpha = accumulator / FIXED_TIME_STEP;
+		stage.getViewport().apply();
+		stage.act();
+		stage.draw();
 
 	}
 
@@ -158,6 +182,7 @@ public class GameCore extends Game {
 		world.dispose();
 		assetManager.dispose();
 		spriteBatch.dispose();
+		stage.dispose();
 	}
 
 

@@ -9,9 +9,12 @@ import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
 import com.github.TeilzeitTodesengel.BladeKiller.map.CollisionArea;
 import com.github.TeilzeitTodesengel.BladeKiller.map.Map;
+import com.github.TeilzeitTodesengel.BladeKiller.ui.GameUI;
 
 import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.*;
 
@@ -52,6 +55,11 @@ public class GameScreen extends AbstractScreen {
 		spawnCollisionAreas();
 		spawnPlayer();
 
+	}
+
+	@Override
+	protected Table getScreenUI(Skin skin) {
+		return new GameUI(stage, skin);
 	}
 
 	private void resetBodyAndFixtureDefinition() {
@@ -109,11 +117,6 @@ public class GameScreen extends AbstractScreen {
 		pShape.dispose();
 	}
 
-	@Override
-	public void show() {
-
-
-	}
 
 	@Override
 	public void render(float delta) {
@@ -173,10 +176,6 @@ public class GameScreen extends AbstractScreen {
 
 	}
 
-	@Override
-	public void hide() {
-
-	}
 
 	@Override
 	public void dispose() {
