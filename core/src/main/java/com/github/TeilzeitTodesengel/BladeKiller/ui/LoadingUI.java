@@ -2,7 +2,6 @@ package com.github.TeilzeitTodesengel.BladeKiller.ui;
 
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -31,7 +30,7 @@ public class LoadingUI extends Table {
 
 		add(pressAnyKeyButton).expand().fill().center().row();
 		add(txtButton).expandX().fillX().bottom().row();
-		add(progressBar).expandX().fillX().bottom().pad(20,25,20,25);
+		add(progressBar).expandX().fillX().bottom().pad(20, 25, 20, 25);
 		bottom();
 	}
 
@@ -39,7 +38,7 @@ public class LoadingUI extends Table {
 		progressBar.setValue(progress);
 		if (progress >= 1 && !pressAnyKeyButton.isVisible()) {
 			pressAnyKeyButton.setVisible(true);
-			pressAnyKeyButton.setColor(1,1,1,0);
+			pressAnyKeyButton.setColor(1, 1, 1, 0);
 			pressAnyKeyButton.addAction(Actions.forever(Actions.sequence(
 					Actions.alpha(1, 1),
 					Actions.alpha(0, 1)

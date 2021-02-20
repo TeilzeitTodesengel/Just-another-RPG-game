@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="12">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="13">
  <tileset firstgid="1" name="Overworld" tilewidth="16" tileheight="16" tilecount="1440" columns="40">
   <image source="../../../gfx/Overworld.png" width="640" height="576"/>
   <tile id="40">
@@ -190,8 +190,8 @@
   <object id="8" x="32.2075" y="879.856" width="15.9486" height="15.9249"/>
   <object id="9" x="96.0257" y="895.856" width="15.9486" height="15.9249"/>
   <object id="10" x="16.0257" y="944.038" width="15.9486" height="15.9249"/>
-  <object id="11" x="62.7667" y="783.989">
-   <polyline points="-3.76563,0.03125 -46.7667,0.0111111 -46.7667,224.011 65.2333,224.011 65.2333,0.0111111 22.07,0.00542929"/>
+  <object id="12" x="59" y="784">
+   <polyline points="0,0 -43,0 -43,224 69,224 69,0 25.8125,-0.0625"/>
   </object>
  </objectgroup>
  <objectgroup id="5" name="gameObjects"/>
