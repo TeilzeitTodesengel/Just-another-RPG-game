@@ -4,12 +4,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
 
 public class GameUI extends Table {
-	public GameUI(final Stage stage, final Skin skin){
-		super(skin);
+	public GameUI(final GameCore context){
+		super(context.getSkin());
 		setFillParent(true);
 
-		add(new TextButton("Blub", skin, "huge"));
+		add(new TextButton("Blub", getSkin(), "huge"));
 	}
 }

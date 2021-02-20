@@ -1,41 +1,20 @@
 {
-  "Color": {
-    "white": {
-      "r": 1,
-      "g": 1,
-      "b": 1,
-      "a": 1
-    }
-  },
+
   "TextButtonStyle": {
     "normal": {
       "font": "font_20",
-      "fontColor": "white"
     },
     "big": {
       "font": "font_26",
-      "fontColor": "white"
     },
     "small": {
       "font": "font_16",
-      "fontColor": "white"
     },
     "huge": {
       "font": "font_32",
-      "fontColor": "white"
     },
     "fat": {
       "font": "font_64",
-      "fontColor": "white"
-    },
-    "info_frame": {
-      "font": "font_16",
-      "fontColor": "white",
-      "up": "frame_brown"
-    },
-    "info": {
-      "font": "font_16",
-      "fontColor": "white"
     }
   },
   "ButtonStyle": {

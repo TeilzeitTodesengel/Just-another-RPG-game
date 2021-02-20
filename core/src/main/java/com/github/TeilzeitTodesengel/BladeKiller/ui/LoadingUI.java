@@ -5,23 +5,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.I18NBundle;
+import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
 
 public class LoadingUI extends Table {
 	private final ProgressBar progressBar;
 	private final TextButton pressAnyKeyButton;
 	private final TextButton txtButton;
 
-	public LoadingUI(Skin skin) {
-		super(skin);
+	public LoadingUI(final GameCore context) {
+		super(context.getSkin());
 		setFillParent(true);
 
-		progressBar = new ProgressBar(0, 1, 1.01f, false, skin, "default");
+		final I18NBundle i18NBundle = context.getI18NBundle();
+
+		progressBar = new ProgressBar(0, 1, 1.01f, false, getSkin(), "default");
 		progressBar.setAnimateDuration(1);
 
-		txtButton = new TextButton("Loading...", skin, "fat");
+		txtButton = new TextButton(i18NBundle.format("loading"), getSkin(), "fat");
 		txtButton.getLabel().setWrap(true);
 
-		pressAnyKeyButton = new TextButton("Press any key", skin, "fat");
+		pressAnyKeyButton = new TextButton(i18NBundle.format("pressAnyKey"), getSkin(), "fat");
 		pressAnyKeyButton.getLabel().setWrap(true);
 		pressAnyKeyButton.setVisible(false);
 

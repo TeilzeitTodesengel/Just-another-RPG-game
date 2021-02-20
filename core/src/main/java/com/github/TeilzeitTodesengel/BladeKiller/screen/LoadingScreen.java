@@ -25,9 +25,11 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
 	}
 
+
+
 	@Override
-	protected LoadingUI getScreenUI(Skin skin) {
-		return new LoadingUI(skin);
+	protected LoadingUI getScreenUI(GameCore context) {
+		return new LoadingUI(context);
 	}
 
 
