@@ -89,6 +89,8 @@ public class GameCore extends Game {
 		setScreen(ScreenType.LOADING);
 	}
 
+	// Getter
+
 	public AudioManager getAudioManager() {
 		return audioManager;
 	}
@@ -113,24 +115,6 @@ public class GameCore extends Game {
 		return box2DDebugRenderer;
 	}
 
-	public void setScreen(final ScreenType screenType) {
-		final Screen screen = screenCache.get(screenType);
-		if (screen == null) {
-			// Screen not yet created -> create it
-			try {
-				Gdx.app.debug(TAG, "Creating new Scree " + screenType);
-				final Screen newScreen = (Screen) ClassReflection.getConstructor(screenType.getScreenClass(), GameCore.class).newInstance(this);
-				screenCache.put(screenType, newScreen);
-				setScreen(newScreen);
-			} catch (ReflectionException e) {
-				throw new GdxRuntimeException("Screen: " + screenType + " could not be created.");
-			}
-		} else {
-			Gdx.app.debug(TAG, "Switching to screen: " + screenType);
-			setScreen(screen);
-		}
-	}
-
 	public AssetManager getAssetManager() {
 		return assetManager;
 	}
@@ -153,6 +137,25 @@ public class GameCore extends Game {
 
 	public String getMap() {
 		return map;
+	}
+
+	// Setter
+	public void setScreen(final ScreenType screenType) {
+		final Screen screen = screenCache.get(screenType);
+		if (screen == null) {
+			// Screen not yet created -> create it
+			try {
+				Gdx.app.debug(TAG, "Creating new Scree " + screenType);
+				final Screen newScreen = (Screen) ClassReflection.getConstructor(screenType.getScreenClass(), GameCore.class).newInstance(this);
+				screenCache.put(screenType, newScreen);
+				setScreen(newScreen);
+			} catch (ReflectionException e) {
+				throw new GdxRuntimeException("Screen: " + screenType + " could not be created.");
+			}
+		} else {
+			Gdx.app.debug(TAG, "Switching to screen: " + screenType);
+			setScreen(screen);
+		}
 	}
 
 	private void initializeSkin() {
