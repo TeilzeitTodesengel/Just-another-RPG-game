@@ -18,7 +18,7 @@ public class Lwjgl3Launcher {
 		Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
 		configuration.setTitle("BladeKiller");
 		configuration.setWindowedMode(450, 800);
-		configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+		configuration.setWindowIcon("icon128.png","icon64.png");
 		return configuration;
 	}
 }

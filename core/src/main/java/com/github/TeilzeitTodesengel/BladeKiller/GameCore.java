@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.github.TeilzeitTodesengel.BladeKiller.audio.AudioManager;
 import com.github.TeilzeitTodesengel.BladeKiller.input.InputManager;
 import com.github.TeilzeitTodesengel.BladeKiller.screen.ScreenType;
 
@@ -45,12 +46,15 @@ public class GameCore extends Game {
 	private Box2DDebugRenderer box2DDebugRenderer;
 	private float accumulator;
 	private AssetManager assetManager;
+	private String map = "Map.tmx";
 
 	private Stage stage;
 	private Skin skin;
 	private I18NBundle i18NBundle;
 
 	private InputManager inputManager;
+
+	private AudioManager audioManager;
 
 	@Override
 	public void create() {
@@ -71,6 +75,9 @@ public class GameCore extends Game {
 		initializeSkin();
 		stage = new Stage(new FitViewport(450, 800), spriteBatch);
 
+		// initialize AudioManager
+		audioManager = new AudioManager(this);
+
 		// input
 		inputManager = new InputManager();
 		Gdx.input.setInputProcessor(new InputMultiplexer(inputManager, stage));
@@ -80,6 +87,10 @@ public class GameCore extends Game {
 		screenViewport = new FitViewport(9, 16, gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		setScreen(ScreenType.LOADING);
+	}
+
+	public AudioManager getAudioManager() {
+		return audioManager;
 	}
 
 	public InputManager getInputManager() {
@@ -138,6 +149,10 @@ public class GameCore extends Game {
 
 	public Skin getSkin() {
 		return skin;
+	}
+
+	public String getMap() {
+		return map;
 	}
 
 	private void initializeSkin() {

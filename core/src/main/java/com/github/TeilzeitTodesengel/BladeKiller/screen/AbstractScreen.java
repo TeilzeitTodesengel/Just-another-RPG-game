@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
+import com.github.TeilzeitTodesengel.BladeKiller.audio.AudioManager;
 import com.github.TeilzeitTodesengel.BladeKiller.input.GameKeyInputListener;
 import com.github.TeilzeitTodesengel.BladeKiller.input.InputManager;
 
@@ -18,6 +19,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
 	protected final Stage stage;
 	protected final T screenUI;
 	protected final InputManager inputManager;
+	protected final AudioManager audioManager;
 
 	public AbstractScreen(final GameCore context) {
 		this.context = context;
@@ -28,7 +30,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
 
 		stage = context.getStage();
 		screenUI = getScreenUI(context);
-
+		audioManager = context.getAudioManager();
 	}
 
 	protected abstract T getScreenUI(final GameCore context);

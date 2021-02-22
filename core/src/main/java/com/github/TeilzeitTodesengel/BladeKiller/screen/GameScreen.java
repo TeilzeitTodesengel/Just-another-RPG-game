@@ -3,6 +3,8 @@ package com.github.TeilzeitTodesengel.BladeKiller.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
@@ -11,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
+import com.github.TeilzeitTodesengel.BladeKiller.audio.AudioType;
 import com.github.TeilzeitTodesengel.BladeKiller.input.GameKeys;
 import com.github.TeilzeitTodesengel.BladeKiller.input.InputManager;
 import com.github.TeilzeitTodesengel.BladeKiller.map.CollisionArea;
@@ -31,6 +34,7 @@ public class GameScreen extends AbstractScreen {
 	private int xFactor;
 	private int yFactor;
 	private final Map map;
+	private boolean isMusicLoaded;
 
 	public GameScreen(final GameCore context) {
 		super(context);
@@ -47,9 +51,16 @@ public class GameScreen extends AbstractScreen {
 		fixtureDef = new FixtureDef();
 
 
-		final TiledMap tiledMap = assetManager.get("Map.tmx", TiledMap.class);
-		mapRenderer.setMap(assetManager.get("Map.tmx", TiledMap.class));
+		final TiledMap tiledMap = assetManager.get(context.getMap(), TiledMap.class);
+		mapRenderer.setMap(assetManager.get(context.getMap(), TiledMap.class));
 		map = new Map(tiledMap);
+
+		// load audio
+		isMusicLoaded = false;
+		for (final AudioType audioType : AudioType.values()) {
+			if (audioType.isMusic()) assetManager.load(audioType.getFilePath(), Music.class);
+			else assetManager.load(audioType.getFilePath(), Sound.class);
+		}
 
 		spawnCollisionAreas();
 		spawnPlayer();
@@ -135,6 +146,12 @@ public class GameScreen extends AbstractScreen {
 		/* Gdx.app.debug("RenderInfo", "Bindings: " + profiler.getTextureBindings());
 		 Gdx.app.debug("RenderInfo", "DrawCalls: " + profiler.getDrawCalls());
 		 profiler.reset(); */
+
+		assetManager.update();
+		if (!isMusicLoaded && assetManager.isLoaded(AudioType.BACKGROUND.getFilePath())) {
+			isMusicLoaded = true;
+			audioManager.playAudio(AudioType.BACKGROUND);
+		}
 
 		viewport.apply(true);
 		mapRenderer.setView(gameCamera);
