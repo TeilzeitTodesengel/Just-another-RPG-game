@@ -197,17 +197,19 @@ public class GameScreen extends AbstractScreen {
 			case LEFT:
 				directionChange = true;
 				xFactor = manager.isKeyPressed(GameKeys.RIGHT) ? 1 : 0;
+				break;
 			case RIGHT:
 				directionChange = true;
-				System.out.println(directionChange);
 				xFactor = manager.isKeyPressed(GameKeys.LEFT) ? -1 : 0;
-				System.out.println(directionChange);
+				break;
 			case UP:
 				directionChange = true;
 				yFactor = manager.isKeyPressed(GameKeys.DOWN) ? -1 : 0;
+				break;
 			case DOWN:
 				directionChange = true;
 				yFactor = manager.isKeyPressed(GameKeys.UP) ? 1 : 0;
+				break;
 			default:
 				// nothing to do
 				return;
