@@ -1,10 +1,7 @@
 package com.github.TeilzeitTodesengel.BladeKiller;
 
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Color;
@@ -28,66 +25,65 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.github.TeilzeitTodesengel.BladeKiller.input.InputManager;
 import com.github.TeilzeitTodesengel.BladeKiller.screen.ScreenType;
 
 import java.util.EnumMap;
 
 public class GameCore extends Game {
-	private static final String TAG = GameCore.class.getSimpleName();
-	private FitViewport screenViewport;
-
-	private EnumMap<ScreenType, Screen> screenCache;
-
-	private OrthographicCamera gameCamera;
-
-	private SpriteBatch spriteBatch;
-
-	public static final float UNIT_SCALE = 1/16f;
+	public static final float UNIT_SCALE = 1 / 16f;
 	public static final short BIT_GROUND = 1 << 0;
 	public static final short BIT_PLAYER = 1 << 1;
-
-	private World world;
-
-	private WorldContactListener worldContactListener;
-
-	private Box2DDebugRenderer box2DDebugRenderer;
-
-	private float accumulator;
+	private static final String TAG = GameCore.class.getSimpleName();
 	private static final float FIXED_TIME_STEP = 1 / 60f;
-
+	private FitViewport screenViewport;
+	private EnumMap<ScreenType, Screen> screenCache;
+	private OrthographicCamera gameCamera;
+	private SpriteBatch spriteBatch;
+	private World world;
+	private WorldContactListener worldContactListener;
+	private Box2DDebugRenderer box2DDebugRenderer;
+	private float accumulator;
 	private AssetManager assetManager;
 
 	private Stage stage;
 	private Skin skin;
 	private I18NBundle i18NBundle;
 
- 	@Override
+	private InputManager inputManager;
+
+	@Override
 	public void create() {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-
 		spriteBatch = new SpriteBatch();
 
+		// box 2d
 		accumulator = 0;
-
 		Box2D.init();
-		world = new World(new Vector2(0,0), true);
+		world = new World(new Vector2(0, 0), true);
 		worldContactListener = new WorldContactListener();
 		world.setContactListener(worldContactListener);
 		box2DDebugRenderer = new Box2DDebugRenderer();
 
+		// initialize assetManager
+		assetManager = new AssetManager();
+		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
+		initializeSkin();
+		stage = new Stage(new FitViewport(450, 800), spriteBatch);
+
+		// input
+		inputManager = new InputManager();
+		Gdx.input.setInputProcessor(new InputMultiplexer(inputManager, stage));
+
+		// set first screen
 		gameCamera = new OrthographicCamera();
-
-	    assetManager = new AssetManager();
-	    assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
-
-	    initializeSkin();
-	    stage = new Stage(new FitViewport(450,800), spriteBatch);
-
-		screenViewport = new FitViewport(9,16, gameCamera);
+		screenViewport = new FitViewport(9, 16, gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		setScreen(ScreenType.LOADING);
+	}
 
-
+	public InputManager getInputManager() {
+		return inputManager;
 	}
 
 	public I18NBundle getI18NBundle() {
@@ -106,9 +102,9 @@ public class GameCore extends Game {
 		return box2DDebugRenderer;
 	}
 
-	public void setScreen (final ScreenType screenType) {
+	public void setScreen(final ScreenType screenType) {
 		final Screen screen = screenCache.get(screenType);
-		if (screen == null){
+		if (screen == null) {
 			// Screen not yet created -> create it
 			try {
 				Gdx.app.debug(TAG, "Creating new Scree " + screenType);
@@ -116,7 +112,7 @@ public class GameCore extends Game {
 				screenCache.put(screenType, newScreen);
 				setScreen(newScreen);
 			} catch (ReflectionException e) {
-				throw  new GdxRuntimeException("Screen: " + screenType + " could not be created.");
+				throw new GdxRuntimeException("Screen: " + screenType + " could not be created.");
 			}
 		} else {
 			Gdx.app.debug(TAG, "Switching to screen: " + screenType);
@@ -145,17 +141,17 @@ public class GameCore extends Game {
 	}
 
 	private void initializeSkin() {
- 		// Setup Markup colors
+		// Setup Markup colors
 		Colors.put("Red", Color.RED);
 		Colors.put("Blue", Color.BLUE);
 
- 		// generate ttf bitmap
+		// generate ttf bitmap
 		final ObjectMap<String, Object> resources = new ObjectMap<String, Object>();
 		final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ui/font.ttf"));
 		final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		fontParameter.minFilter = Texture.TextureFilter.Linear;
 		fontParameter.magFilter = Texture.TextureFilter.Linear;
-		final int[] sizesToCreate = {16,20,26,32,64};
+		final int[] sizesToCreate = {16, 20, 26, 32, 64};
 		for (int size : sizesToCreate) {
 			fontParameter.size = size;
 			final BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
@@ -181,7 +177,7 @@ public class GameCore extends Game {
 		//Gdx.app.debug(TAG, "" + Gdx.graphics.getDeltaTime());
 		accumulator += Math.min(0.25f, Gdx.graphics.getDeltaTime());
 		while (accumulator >= FIXED_TIME_STEP) {
-			world.step(FIXED_TIME_STEP,6,2);
+			world.step(FIXED_TIME_STEP, 6, 2);
 			accumulator -= FIXED_TIME_STEP;
 		}
 

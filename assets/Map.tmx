@@ -176,7 +176,7 @@
  </layer>
  <layer id="2" name="background 1" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt17ENwjAQRmHba8AWXoFxWCAwDVACG3gBoASGgYqLQhTLskGU3L1P+ptc9Qos4RwAAAAAAAAAAAAAAAAAAAAA/Ie5/23aWO9f+O9bKu7fB+eO7z3D8O2RfTvIZor776F9S364W+0f71b6U9YXw3S30N+3p0qflf5erPwWLPW37hb6Y+MdsNJfsvb+fbrTr7u/9u7nd+39o062kq2Lu5X+jWwr2xV3K/0n2Vl2Ke6a+6/Zf93absr7X2A5OZ8=
+   eJzt10EOwUAUgOGZpk7BZdo4jgvgChwCS+zYuQCW2NlxCVbepDNRDRFL7/1f8qL6Vn8HCecAAAAAAAAAAAAAAAAAAAAA4D90/G+jjfX+rv8+PcX988y5ZZx7Vt271e4tZNqK+0/Z593GV3uL/Vltr70/tYbzLn31WvjnXnt/kNrL2F4a6w+94XLjn88i7a30p2dQ+Ne9hf70nb8Y/fyH5mucwNLvf3CJZ5+6rfUHxZs+C/2j3Llx/nmvvX8l7WuZvrwfyAwbe+3953j2E5mpzKyx196ft6rrrcxOZt/Ya+4/1P7rvpuj8v4HJn9GOA==
   </data>
  </layer>
  <layer id="4" name="foreground" width="64" height="64">
@@ -185,11 +185,6 @@
   </data>
  </layer>
  <objectgroup id="9" name="collision">
-  <object id="6" x="95.6667" y="816.333" width="16.1515" height="15.3333"/>
-  <object id="7" x="48.25" y="847.738" width="15.9486" height="15.9249"/>
-  <object id="8" x="32.2075" y="879.856" width="15.9486" height="15.9249"/>
-  <object id="9" x="96.0257" y="895.856" width="15.9486" height="15.9249"/>
-  <object id="10" x="16.0257" y="944.038" width="15.9486" height="15.9249"/>
   <object id="12" x="59" y="784">
    <polyline points="0,0 -43,0 -43,224 69,224 69,0 25.8125,-0.0625"/>
   </object>

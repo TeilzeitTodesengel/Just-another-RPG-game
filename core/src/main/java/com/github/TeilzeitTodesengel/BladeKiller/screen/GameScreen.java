@@ -11,6 +11,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
+import com.github.TeilzeitTodesengel.BladeKiller.input.GameKeys;
+import com.github.TeilzeitTodesengel.BladeKiller.input.InputManager;
 import com.github.TeilzeitTodesengel.BladeKiller.map.CollisionArea;
 import com.github.TeilzeitTodesengel.BladeKiller.map.Map;
 import com.github.TeilzeitTodesengel.BladeKiller.ui.GameUI;
@@ -20,31 +22,29 @@ import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.*;
 public class GameScreen extends AbstractScreen {
 	private final BodyDef bodyDef;
 	private final FixtureDef fixtureDef;
-
-	private Body player;
-
 	private final AssetManager assetManager;
 	private final OrthographicCamera gameCamera;
-
 	private final OrthogonalTiledMapRenderer mapRenderer;
-
 	private final GLProfiler profiler;
-
-	private Map map;
+	private Body player;
+	private boolean directionChange;
+	private int xFactor;
+	private int yFactor;
+	private final Map map;
 
 	public GameScreen(final GameCore context) {
-		 super(context);
+		super(context);
 
-		 assetManager = context.getAssetManager();
-		 gameCamera = context.getGameCamera();
+		assetManager = context.getAssetManager();
+		gameCamera = context.getGameCamera();
 
-		 profiler = new GLProfiler(Gdx.graphics);
-		 profiler.enable();
+		profiler = new GLProfiler(Gdx.graphics);
+		profiler.enable();
 
-		 mapRenderer = new OrthogonalTiledMapRenderer(null,UNIT_SCALE , context.getSpriteBatch());
+		mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, context.getSpriteBatch());
 
-		 bodyDef = new BodyDef();
-		 fixtureDef = new FixtureDef();
+		bodyDef = new BodyDef();
+		fixtureDef = new FixtureDef();
 
 
 		final TiledMap tiledMap = assetManager.get("Map.tmx", TiledMap.class);
@@ -62,7 +62,7 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void resetBodyAndFixtureDefinition() {
-		bodyDef.position.set(0,0);
+		bodyDef.position.set(0, 0);
 		bodyDef.gravityScale = 1;
 		bodyDef.type = BodyDef.BodyType.StaticBody;
 		bodyDef.fixedRotation = false;
@@ -102,7 +102,7 @@ public class GameScreen extends AbstractScreen {
 		resetBodyAndFixtureDefinition();
 		bodyDef.position.set(map.getStartLocation());
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		player  = world.createBody(bodyDef);
+		player = world.createBody(bodyDef);
 		player.setUserData("PLAYER");
 
 
@@ -119,39 +119,22 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0,0,0,1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		final float speedX;
-		final float speedY;
-
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-			speedX = -3;
-		} else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			speedX = 3;
-		} else {
-			speedX = 0;
+		if (directionChange) {
+			player.applyLinearImpulse(
+					(xFactor * 3 - player.getLinearVelocity().x) * player.getMass(),
+					(yFactor * 3 - player.getLinearVelocity().y) * player.getMass(),
+					player.getWorldCenter().x,
+					player.getWorldCenter().y,
+					true
+			);
 		}
 
-		if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-			speedY = -3;
-		} else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-			speedY = 3;
-		} else {
-			speedY = 0;
-		}
-
-		player.applyLinearImpulse(
-				(speedX - player.getLinearVelocity().x) * player.getMass(),
-				(speedY - player.getLinearVelocity().y) * player.getMass(),
-				player.getWorldCenter().x,
-				player.getWorldCenter().y,
-				true
-		);
-
-		// Gdx.app.debug("RenderInfo", "Bindings: " + profiler.getTextureBindings());
-		// Gdx.app.debug("RenderInfo", "DrawCalls: " + profiler.getDrawCalls());
-		// profiler.reset();
+		/* Gdx.app.debug("RenderInfo", "Bindings: " + profiler.getTextureBindings());
+		 Gdx.app.debug("RenderInfo", "DrawCalls: " + profiler.getDrawCalls());
+		 profiler.reset(); */
 
 		viewport.apply(true);
 		mapRenderer.setView(gameCamera);
@@ -162,7 +145,7 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		super.resize(width,height);
+		super.resize(width, height);
 	}
 
 	@Override
@@ -179,6 +162,56 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		mapRenderer.dispose();
+
+	}
+
+	@Override
+	public void keyPressed(InputManager manager, GameKeys key) {
+		switch (key) {
+			case LEFT:
+				directionChange = true;
+				xFactor = -1;
+				break;
+			case RIGHT:
+				directionChange = true;
+				xFactor = 1;
+				break;
+			case UP:
+				directionChange = true;
+				yFactor = 1;
+				break;
+			case DOWN:
+				directionChange = true;
+				yFactor = -1;
+				break;
+			default:
+				// nothing to do
+				return;
+		}
+
+	}
+
+	@Override
+	public void keyUp(InputManager manager, GameKeys key) {
+		switch (key) {
+			case LEFT:
+				directionChange = true;
+				xFactor = manager.isKeyPressed(GameKeys.RIGHT) ? 1 : 0;
+			case RIGHT:
+				directionChange = true;
+				System.out.println(directionChange);
+				xFactor = manager.isKeyPressed(GameKeys.LEFT) ? -1 : 0;
+				System.out.println(directionChange);
+			case UP:
+				directionChange = true;
+				yFactor = manager.isKeyPressed(GameKeys.DOWN) ? -1 : 0;
+			case DOWN:
+				directionChange = true;
+				yFactor = manager.isKeyPressed(GameKeys.UP) ? 1 : 0;
+			default:
+				// nothing to do
+				return;
+		}
 
 	}
 }
