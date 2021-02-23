@@ -14,9 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -26,7 +24,9 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.TeilzeitTodesengel.BladeKiller.audio.AudioManager;
+import com.github.TeilzeitTodesengel.BladeKiller.ecs.ECSEngine;
 import com.github.TeilzeitTodesengel.BladeKiller.input.InputManager;
+import com.github.TeilzeitTodesengel.BladeKiller.map.MapManager;
 import com.github.TeilzeitTodesengel.BladeKiller.screen.ScreenType;
 
 import java.util.EnumMap;
@@ -37,6 +37,10 @@ public class GameCore extends Game {
 	public static final short BIT_PLAYER = 1 << 1;
 	private static final String TAG = GameCore.class.getSimpleName();
 	private static final float FIXED_TIME_STEP = 1 / 60f;
+
+	public static final BodyDef BODY_DEF = new BodyDef();
+	public static final FixtureDef FIXTURE_DEF = new FixtureDef();
+
 	private FitViewport screenViewport;
 	private EnumMap<ScreenType, Screen> screenCache;
 	private OrthographicCamera gameCamera;
@@ -48,11 +52,15 @@ public class GameCore extends Game {
 	private AssetManager assetManager;
 	private String map = "Map.tmx";
 
+	private MapManager mapManager;
+
 	private Stage stage;
 	private Skin skin;
 	private I18NBundle i18NBundle;
 
 	private InputManager inputManager;
+
+	private ECSEngine ecsEngine;
 
 	private AudioManager audioManager;
 
@@ -75,6 +83,7 @@ public class GameCore extends Game {
 		initializeSkin();
 		stage = new Stage(new FitViewport(450, 800), spriteBatch);
 
+
 		// initialize AudioManager
 		audioManager = new AudioManager(this);
 
@@ -82,14 +91,31 @@ public class GameCore extends Game {
 		inputManager = new InputManager();
 		Gdx.input.setInputProcessor(new InputMultiplexer(inputManager, stage));
 
-		// set first screen
+		// setup game viewport
 		gameCamera = new OrthographicCamera();
 		screenViewport = new FitViewport(9, 16, gameCamera);
+
+		// setup mapManager
+		mapManager = new MapManager(this);
+
+		// ECSEngine
+		ecsEngine = new ECSEngine(this);
+
+		// set first screen.
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		setScreen(ScreenType.LOADING);
 	}
 
 	// Getter
+
+
+	public MapManager getMapManager() {
+		return mapManager;
+	}
+
+	public ECSEngine getEcsEngine() {
+		return ecsEngine;
+	}
 
 	public AudioManager getAudioManager() {
 		return audioManager;
@@ -192,6 +218,8 @@ public class GameCore extends Game {
 	public void render() {
 		super.render();
 
+		ecsEngine.update(Gdx.graphics.getDeltaTime());
+
 		//Gdx.app.debug(TAG, "" + Gdx.graphics.getDeltaTime());
 		accumulator += Math.min(0.25f, Gdx.graphics.getDeltaTime());
 		while (accumulator >= FIXED_TIME_STEP) {
@@ -214,6 +242,21 @@ public class GameCore extends Game {
 		assetManager.dispose();
 		spriteBatch.dispose();
 		stage.dispose();
+	}
+
+	public static void resetBodyAndFixtureDefinition() {
+		BODY_DEF.position.set(0, 0);
+		BODY_DEF.gravityScale = 1;
+		BODY_DEF.type = BodyDef.BodyType.StaticBody;
+		BODY_DEF.fixedRotation = false;
+
+		FIXTURE_DEF.density = 0;
+		FIXTURE_DEF.isSensor = false;
+		FIXTURE_DEF.restitution = 0;
+		FIXTURE_DEF.friction = 0.2f;
+		FIXTURE_DEF.filter.categoryBits = 0x0001;
+		FIXTURE_DEF.filter.maskBits = -1;
+		FIXTURE_DEF.shape = null;
 	}
 
 
