@@ -11,17 +11,17 @@ import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.AnimationComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.B2DComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.PlayerComponent;
+import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.AnimationSystem;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.PlayerCameraSystem;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.PlayerMovementSystem;
+import com.github.TeilzeitTodesengel.BladeKiller.view.AnimationType;
 
-import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.BIT_GROUND;
-import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.BIT_PLAYER;
-import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.BODY_DEF;
-import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.FIXTURE_DEF;
+import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.*;
 
 public class ECSEngine extends PooledEngine {
 	public static final ComponentMapper<PlayerComponent> playerCmpMapper = ComponentMapper.getFor(PlayerComponent.class);
 	public static final ComponentMapper<B2DComponent> b2DCmpMapper = ComponentMapper.getFor(B2DComponent.class);
+	public static final ComponentMapper<AnimationComponent> aniCmpMapper = ComponentMapper.getFor(AnimationComponent.class);
 
 	private final World world;
 
@@ -34,6 +34,7 @@ public class ECSEngine extends PooledEngine {
 
 		this.addSystem(new PlayerMovementSystem(context));
 		this.addSystem(new PlayerCameraSystem(context));
+		this.addSystem(new AnimationSystem(context));
 	}
 
 
@@ -69,6 +70,9 @@ public class ECSEngine extends PooledEngine {
 
 		// animation component
 		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		animationComponent.aniType= AnimationType.HERO_MOVE_DOWN;
+		animationComponent.width = 32 * UNIT_SCALE  * 0.7f;
+		animationComponent.height = 36 * UNIT_SCALE * 0.7f;
 		player.add(animationComponent);
 
 		this.addEntity(player);

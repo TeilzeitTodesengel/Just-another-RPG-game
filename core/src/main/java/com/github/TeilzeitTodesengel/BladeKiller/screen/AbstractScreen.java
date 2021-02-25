@@ -15,7 +15,6 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
 	protected final GameCore context;
 	protected final FitViewport viewport;
 	protected final World world;
-	protected final Box2DDebugRenderer box2DDebugRenderer;
 	protected final Stage stage;
 	protected final T screenUI;
 	protected final InputManager inputManager;
@@ -25,7 +24,6 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
 		this.context = context;
 		viewport = context.getScreenViewport();
 		this.world = context.getWorld();
-		this.box2DDebugRenderer = context.getBox2DDebugRenderer();
 		inputManager = context.getInputManager();
 
 		stage = context.getStage();

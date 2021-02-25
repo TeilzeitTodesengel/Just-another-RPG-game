@@ -7,9 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -27,6 +25,8 @@ import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.B2DComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.map.Map;
 import com.github.TeilzeitTodesengel.BladeKiller.map.MapListener;
 
+import java.util.EnumMap;
+
 import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.UNIT_SCALE;
 
 public class GameRenderer implements Disposable, MapListener {
@@ -36,6 +36,7 @@ public class GameRenderer implements Disposable, MapListener {
 	private final FitViewport viewport;
 	private final SpriteBatch spriteBatch;
 	private final AssetManager assetManager;
+	private final EnumMap<AnimationType, Animation<Sprite>> animationCache;
 
 	private final ImmutableArray<Entity> animatedEntities;
 	private final OrthogonalTiledMapRenderer mapRenderer;
@@ -45,14 +46,14 @@ public class GameRenderer implements Disposable, MapListener {
 	private final Box2DDebugRenderer box2DDebugRenderer;
 	private final World world;
 
-	private Sprite dummySprite;
-
 
 	public GameRenderer(final GameCore context) {
 		assetManager = context.getAssetManager();
 		viewport = context.getScreenViewport();
 		gameCamera = context.getGameCamera();
 		spriteBatch = context.getSpriteBatch();
+
+		animationCache = new EnumMap<AnimationType, Animation<Sprite>>(AnimationType.class);
 
 		animatedEntities = context.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, B2DComponent.class).get());
 
@@ -61,7 +62,7 @@ public class GameRenderer implements Disposable, MapListener {
 		tiledMapLayers = new Array<TiledMapTileLayer>();
 
 		profiler = new GLProfiler(Gdx.graphics);
-		profiler.disable();
+		profiler.enable();
 		if (profiler.isEnabled()) {
 			box2DDebugRenderer = new Box2DDebugRenderer();
 			world = context.getWorld();
@@ -103,10 +104,42 @@ public class GameRenderer implements Disposable, MapListener {
 
 	private void renderEntity(final Entity entity, float alpha) {
 		final B2DComponent b2DComponent = ECSEngine.b2DCmpMapper.get(entity);
+		final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
+
+		if (aniComponent.aniType  != null) {
+			final Animation<Sprite> animation = getAnimation(aniComponent.aniType);
+			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
+			frame.setBounds(b2DComponent.renderPosition.x - aniComponent.width * 0.5f, b2DComponent.renderPosition.y - aniComponent.height * 0.5f, aniComponent.width, aniComponent.height);
+			frame.draw(spriteBatch);
+		}
 
 		b2DComponent.renderPosition.lerp(b2DComponent.body.getPosition(), alpha);
-		dummySprite.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * 0.5f, b2DComponent.renderPosition.y - b2DComponent.height * 0.5f, b2DComponent.width, b2DComponent.height);
-		dummySprite.draw(spriteBatch);
+//		dummySprite.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * 0.5f, b2DComponent.renderPosition.y - b2DComponent.height * 0.5f, b2DComponent.width, b2DComponent.height);
+//		dummySprite.draw(spriteBatch);
+	}
+
+	private Animation<Sprite> getAnimation(AnimationType aniType) {
+		Animation<Sprite> animation = animationCache.get(aniType);
+		if (animation == null) {
+			// create Animation
+			Gdx.app.debug(TAG, "Creating Animation of Type: " + aniType);
+			final TextureAtlas.AtlasRegion atlasRegion = assetManager.get(aniType.getAtlasPath(), TextureAtlas.class).findRegion(aniType.getAtlasKey());
+			final TextureRegion[][] textureRegions = atlasRegion.split(32, 36);
+			animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrames(textureRegions[aniType.getRowIndex()]), Animation.PlayMode.LOOP);
+			animationCache.put(aniType, animation);
+		}
+		return animation;
+	}
+
+	private Array<? extends Sprite> getKeyFrames(TextureRegion[] textureRegion) {
+		final Array<Sprite> keyFrames = new Array<Sprite>();
+		for (final TextureRegion region : textureRegion) {
+			final Sprite sprite = new Sprite(region);
+			sprite.setOriginCenter();
+			keyFrames.add(sprite);
+		}
+
+		return keyFrames;
 	}
 
 	@Override
@@ -122,10 +155,5 @@ public class GameRenderer implements Disposable, MapListener {
 	public void mapChange(Map map) {
 		mapRenderer.setMap(map.getTiledMap());
 		map.getTiledMap().getLayers().getByType(TiledMapTileLayer.class, tiledMapLayers);
-
-		if (dummySprite == null) {
-			dummySprite = assetManager.get("characters_and_effects/character_and_effects.atlas", TextureAtlas.class).createSprite("tools");
-			dummySprite.setOriginCenter();
-		}
 	}
 }
