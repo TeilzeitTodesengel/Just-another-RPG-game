@@ -50,6 +50,8 @@ public class MapManager {
 		}
 
 		// set new map
+		Gdx.app.debug(TAG, "Changing to map " + type);
+		currentMap = mapCache.get(type);
 		if (currentMap == null) {
 			Gdx.app.debug(TAG, "Creating new map of type " + type);
 			final TiledMap tiledMap = assetManager.get(type.getFilePath(), TiledMap.class);
@@ -57,6 +59,7 @@ public class MapManager {
 			mapCache.put(type, currentMap);
 		}
 
+		// create map entities/ bodies
 		spawnCollisionAreas();
 
 		for (final MapListener listener : listeners) {

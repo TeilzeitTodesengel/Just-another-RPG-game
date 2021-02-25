@@ -28,6 +28,7 @@ import com.github.TeilzeitTodesengel.BladeKiller.ecs.ECSEngine;
 import com.github.TeilzeitTodesengel.BladeKiller.input.InputManager;
 import com.github.TeilzeitTodesengel.BladeKiller.map.MapManager;
 import com.github.TeilzeitTodesengel.BladeKiller.screen.ScreenType;
+import com.github.TeilzeitTodesengel.BladeKiller.view.GameRenderer;
 
 import java.util.EnumMap;
 
@@ -47,7 +48,6 @@ public class GameCore extends Game {
 	private SpriteBatch spriteBatch;
 	private World world;
 	private WorldContactListener worldContactListener;
-	private Box2DDebugRenderer box2DDebugRenderer;
 	private float accumulator;
 	private AssetManager assetManager;
 	private String map = "Map.tmx";
@@ -64,6 +64,8 @@ public class GameCore extends Game {
 
 	private AudioManager audioManager;
 
+	private GameRenderer gameRenderer;
+
 	@Override
 	public void create() {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -75,7 +77,6 @@ public class GameCore extends Game {
 		world = new World(new Vector2(0, 0), true);
 		worldContactListener = new WorldContactListener();
 		world.setContactListener(worldContactListener);
-		box2DDebugRenderer = new Box2DDebugRenderer();
 
 		// initialize assetManager
 		assetManager = new AssetManager();
@@ -100,6 +101,9 @@ public class GameCore extends Game {
 
 		// ECSEngine
 		ecsEngine = new ECSEngine(this);
+
+		// gamerenderer
+		gameRenderer = new GameRenderer(this);
 
 		// set first screen.
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
@@ -135,10 +139,6 @@ public class GameCore extends Game {
 
 	public World getWorld() {
 		return world;
-	}
-
-	public Box2DDebugRenderer getBox2DDebugRenderer() {
-		return box2DDebugRenderer;
 	}
 
 	public AssetManager getAssetManager() {
@@ -220,16 +220,15 @@ public class GameCore extends Game {
 
 		ecsEngine.update(Gdx.graphics.getDeltaTime());
 
-		//Gdx.app.debug(TAG, "" + Gdx.graphics.getDeltaTime());
 		accumulator += Math.min(0.25f, Gdx.graphics.getDeltaTime());
 		while (accumulator >= FIXED_TIME_STEP) {
 			world.step(FIXED_TIME_STEP, 6, 2);
 			accumulator -= FIXED_TIME_STEP;
 		}
 
-		//final float alpha = accumulator / FIXED_TIME_STEP;
+		gameRenderer.render(accumulator / FIXED_TIME_STEP);
 		stage.getViewport().apply();
-		stage.act();
+		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
 	}
@@ -237,7 +236,7 @@ public class GameCore extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
-		box2DDebugRenderer.dispose();
+		gameRenderer.dispose();
 		world.dispose();
 		assetManager.dispose();
 		spriteBatch.dispose();

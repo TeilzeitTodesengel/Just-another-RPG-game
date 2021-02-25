@@ -1,4 +1,4 @@
-package com.github.TeilzeitTodesengel.BladeKiller.ui;
+package com.github.TeilzeitTodesengel.BladeKiller.view;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;

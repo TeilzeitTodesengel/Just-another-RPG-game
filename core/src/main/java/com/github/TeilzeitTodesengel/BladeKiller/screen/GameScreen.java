@@ -17,17 +17,18 @@ import com.github.TeilzeitTodesengel.BladeKiller.map.Map;
 import com.github.TeilzeitTodesengel.BladeKiller.map.MapListener;
 import com.github.TeilzeitTodesengel.BladeKiller.map.MapManager;
 import com.github.TeilzeitTodesengel.BladeKiller.map.MapType;
-import com.github.TeilzeitTodesengel.BladeKiller.ui.GameUI;
+import com.github.TeilzeitTodesengel.BladeKiller.view.GameUI;
 
 import static com.github.TeilzeitTodesengel.BladeKiller.GameCore.UNIT_SCALE;
 
-public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
+public class GameScreen extends AbstractScreen<GameUI>{
 	private final AssetManager assetManager;
 	private final OrthographicCamera gameCamera;
 	private final OrthogonalTiledMapRenderer mapRenderer;
 	private final GLProfiler profiler;
 	private final MapManager mapManager;
 	private boolean isMusicLoaded;
+
 	public GameScreen(final GameCore context) {
 		super(context);
 
@@ -40,7 +41,6 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
 		mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, context.getSpriteBatch());
 
 		mapManager = context.getMapManager();
-		mapManager.addMapLister(this);
 		mapManager.setMap(MapType.MAP_1);
 
 		// load audio
@@ -61,26 +61,18 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
-		/* Gdx.app.debug("RenderInfo", "Bindings: " + profiler.getTextureBindings());
-		 Gdx.app.debug("RenderInfo", "DrawCalls: " + profiler.getDrawCalls());
-		 profiler.reset(); */
-
 		assetManager.update();
 		if (!isMusicLoaded && assetManager.isLoaded(AudioType.BACKGROUND.getFilePath())) {
 			isMusicLoaded = true;
 			audioManager.playAudio(AudioType.BACKGROUND);
 		}
 
-		viewport.apply(false);
-		if (mapRenderer.getMap() != null) {
-			mapRenderer.setView(gameCamera);
-			mapRenderer.render();
+		// TODO Remove Debug for MapManager
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+			mapManager.setMap(MapType.MAP_1);
+		} else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+			mapManager.setMap(MapType.MAP_2);
 		}
-		box2DDebugRenderer.render(world, viewport.getCamera().combined);
 
 	}
 
@@ -108,19 +100,10 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
 
 	@Override
 	public void keyPressed(InputManager manager, GameKeys key) {
-		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-			mapManager.setMap(MapType.MAP_1);
-		} else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-			mapManager.setMap(MapType.MAP_2);
-		}
 	}
 
 	@Override
 	public void keyUp(InputManager manager, GameKeys key) {
 	}
 
-	@Override
-	public void mapChange(final Map map) {
-		mapRenderer.setMap(mapManager.getCurrentMap().getTiledMap()); // <--- this is most likely the part you are missing
-	}
 }

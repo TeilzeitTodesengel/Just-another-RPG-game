@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
+import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.AnimationComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.B2DComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.PlayerComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.PlayerCameraSystem;
@@ -53,6 +54,7 @@ public class ECSEngine extends PooledEngine {
 		b2DComponent.body.setUserData("PLAYER");
 		b2DComponent.width = width;
 		b2DComponent.height = height;
+		b2DComponent.renderPosition.set(b2DComponent.body.getPosition());
 
 
 		FIXTURE_DEF.filter.categoryBits = BIT_PLAYER;
@@ -63,8 +65,12 @@ public class ECSEngine extends PooledEngine {
 		FIXTURE_DEF.shape = pShape;
 		b2DComponent.body.createFixture(FIXTURE_DEF);
 		pShape.dispose();
-
 		player.add(b2DComponent);
+
+		// animation component
+		final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+		player.add(animationComponent);
+
 		this.addEntity(player);
 	}
 

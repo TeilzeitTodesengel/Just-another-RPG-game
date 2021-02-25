@@ -1,0 +1,20 @@
+
+character_and_effects.png
+size: 256, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+tools
+  rotate: false
+  xy: 2, 18
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+warrior_m
+  rotate: false
+  xy: 132, 2
+  size: 96, 144
+  orig: 96, 144
+  offset: 0, 0
+  index: -1
