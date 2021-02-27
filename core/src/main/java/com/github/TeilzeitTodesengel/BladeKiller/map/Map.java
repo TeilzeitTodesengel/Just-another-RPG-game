@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -69,7 +71,6 @@ public class Map {
 				final PolylineMapObject polylineMapObject = (PolylineMapObject) mapObj;
 				final Polyline polyline = polylineMapObject.getPolyline();
 				collisionAreas.add(new CollisionArea(polyline.getX(), polyline.getY(), polyline.getVertices()));
-
 			} else {
 				Gdx.app.debug(TAG, "MapObject of type " + mapObj + "is not supported for Collision Layer.");
 			}

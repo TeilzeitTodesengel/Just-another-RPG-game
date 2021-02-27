@@ -12,6 +12,7 @@ import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.AnimationComponen
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.B2DComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.component.PlayerComponent;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.AnimationSystem;
+import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.PlayerAnimationSystem;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.PlayerCameraSystem;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.system.PlayerMovementSystem;
 import com.github.TeilzeitTodesengel.BladeKiller.view.AnimationType;
@@ -35,6 +36,7 @@ public class ECSEngine extends PooledEngine {
 		this.addSystem(new PlayerMovementSystem(context));
 		this.addSystem(new PlayerCameraSystem(context));
 		this.addSystem(new AnimationSystem(context));
+		this.addSystem(new PlayerAnimationSystem(context));
 	}
 
 
@@ -59,7 +61,7 @@ public class ECSEngine extends PooledEngine {
 
 
 		FIXTURE_DEF.filter.categoryBits = BIT_PLAYER;
-		FIXTURE_DEF.density = 1;
+		FIXTURE_DEF.density = 0;
 		FIXTURE_DEF.filter.maskBits = BIT_GROUND;
 		final PolygonShape pShape = new PolygonShape();
 		pShape.setAsBox(width * 0.5f, height * 0.5f);

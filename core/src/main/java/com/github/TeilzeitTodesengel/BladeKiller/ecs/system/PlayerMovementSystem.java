@@ -26,7 +26,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		if (directionChange) {
+		//if (directionChange) {
 			final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
 			final B2DComponent b2DComponent = ECSEngine.b2DCmpMapper.get(entity);
 
@@ -37,7 +37,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
 					b2DComponent.body.getWorldCenter().y,
 					true
 			);
-		}
+		//}
 
 
 	}

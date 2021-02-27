@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.TeilzeitTodesengel.BladeKiller.GameCore;
 import com.github.TeilzeitTodesengel.BladeKiller.ecs.ECSEngine;
@@ -37,6 +38,7 @@ public class GameRenderer implements Disposable, MapListener {
 	private final SpriteBatch spriteBatch;
 	private final AssetManager assetManager;
 	private final EnumMap<AnimationType, Animation<Sprite>> animationCache;
+	private final ObjectMap<String, TextureRegion[][]> regionCache;
 
 	private final ImmutableArray<Entity> animatedEntities;
 	private final OrthogonalTiledMapRenderer mapRenderer;
@@ -54,6 +56,7 @@ public class GameRenderer implements Disposable, MapListener {
 		spriteBatch = context.getSpriteBatch();
 
 		animationCache = new EnumMap<AnimationType, Animation<Sprite>>(AnimationType.class);
+		regionCache = new ObjectMap<String, TextureRegion[][]>();
 
 		animatedEntities = context.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, B2DComponent.class).get());
 
@@ -62,7 +65,7 @@ public class GameRenderer implements Disposable, MapListener {
 		tiledMapLayers = new Array<TiledMapTileLayer>();
 
 		profiler = new GLProfiler(Gdx.graphics);
-		profiler.enable();
+		profiler.disable();
 		if (profiler.isEnabled()) {
 			box2DDebugRenderer = new Box2DDebugRenderer();
 			world = context.getWorld();
@@ -79,14 +82,16 @@ public class GameRenderer implements Disposable, MapListener {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		viewport.apply(false);
+
+		mapRenderer.setView(gameCamera);
 		spriteBatch.begin();
 		if (mapRenderer.getMap() != null) {
 			AnimatedTiledMapTile.updateAnimationBaseTime();
-			mapRenderer.setView(gameCamera);
 			for (final TiledMapTileLayer layer : tiledMapLayers) {
 				mapRenderer.renderTileLayer(layer);
 			}
 		}
+
 
 		for (final Entity entity : animatedEntities) {
 			renderEntity(entity, alpha);
@@ -109,7 +114,7 @@ public class GameRenderer implements Disposable, MapListener {
 		if (aniComponent.aniType  != null) {
 			final Animation<Sprite> animation = getAnimation(aniComponent.aniType);
 			final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
-			frame.setBounds(b2DComponent.renderPosition.x - aniComponent.width * 0.5f, b2DComponent.renderPosition.y - aniComponent.height * 0.5f, aniComponent.width, aniComponent.height);
+			frame.setBounds(b2DComponent.renderPosition.x - aniComponent.width * 0.5f, b2DComponent.renderPosition.y - aniComponent.height / 4, aniComponent.width, aniComponent.height);
 			frame.draw(spriteBatch);
 		}
 
@@ -123,20 +128,28 @@ public class GameRenderer implements Disposable, MapListener {
 		if (animation == null) {
 			// create Animation
 			Gdx.app.debug(TAG, "Creating Animation of Type: " + aniType);
-			final TextureAtlas.AtlasRegion atlasRegion = assetManager.get(aniType.getAtlasPath(), TextureAtlas.class).findRegion(aniType.getAtlasKey());
-			final TextureRegion[][] textureRegions = atlasRegion.split(32, 36);
-			animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrames(textureRegions[aniType.getRowIndex()]), Animation.PlayMode.LOOP);
+			TextureRegion[][] textureRegions = regionCache.get(aniType.getAtlasKey());
+			if (textureRegions == null) {
+				Gdx.app.debug(TAG, "Creating Texture Regions for " + aniType.getAtlasKey());
+				final TextureAtlas.AtlasRegion atlasRegion = assetManager.get(aniType.getAtlasPath(), TextureAtlas.class).findRegion(aniType.getAtlasKey());
+				textureRegions = atlasRegion.split(32,36);
+				regionCache.put(aniType.getAtlasKey(), textureRegions);
+			}
+			animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrames(textureRegions[aniType.getRowIndex()]));
+			animation.setPlayMode(Animation.PlayMode.LOOP);
 			animationCache.put(aniType, animation);
 		}
 		return animation;
 	}
 
-	private Array<? extends Sprite> getKeyFrames(TextureRegion[] textureRegion) {
-		final Array<Sprite> keyFrames = new Array<Sprite>();
+	private Sprite[] getKeyFrames(TextureRegion[] textureRegion) {
+		final Sprite[] keyFrames = new Sprite[textureRegion.length];
+
+		int i = 0;
 		for (final TextureRegion region : textureRegion) {
 			final Sprite sprite = new Sprite(region);
 			sprite.setOriginCenter();
-			keyFrames.add(sprite);
+			keyFrames[i++] = sprite;
 		}
 
 		return keyFrames;

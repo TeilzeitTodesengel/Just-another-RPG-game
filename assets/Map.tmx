@@ -1,169 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="13">
- <tileset firstgid="1" name="Overworld" tilewidth="16" tileheight="16" tilecount="1440" columns="40">
-  <image source="../../../map/Overworld.png" width="640" height="576"/>
-  <tile id="40">
-   <animation>
-    <frame tileid="40" duration="200"/>
-    <frame tileid="41" duration="200"/>
-    <frame tileid="42" duration="200"/>
-    <frame tileid="43" duration="200"/>
-    <frame tileid="80" duration="200"/>
-    <frame tileid="81" duration="200"/>
-    <frame tileid="82" duration="200"/>
-    <frame tileid="83" duration="200"/>
-   </animation>
-  </tile>
-  <tile id="96">
-   <animation>
-    <frame tileid="96" duration="150"/>
-    <frame tileid="98" duration="150"/>
-    <frame tileid="100" duration="150"/>
-    <frame tileid="16" duration="150"/>
-    <frame tileid="18" duration="150"/>
-    <frame tileid="20" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="97">
-   <animation>
-    <frame tileid="97" duration="150"/>
-    <frame tileid="99" duration="150"/>
-    <frame tileid="101" duration="150"/>
-    <frame tileid="17" duration="150"/>
-    <frame tileid="19" duration="150"/>
-    <frame tileid="21" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="136">
-   <animation>
-    <frame tileid="136" duration="150"/>
-    <frame tileid="138" duration="150"/>
-    <frame tileid="140" duration="150"/>
-    <frame tileid="56" duration="150"/>
-    <frame tileid="58" duration="150"/>
-    <frame tileid="60" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="137">
-   <animation>
-    <frame tileid="137" duration="150"/>
-    <frame tileid="139" duration="150"/>
-    <frame tileid="141" duration="150"/>
-    <frame tileid="57" duration="150"/>
-    <frame tileid="59" duration="150"/>
-    <frame tileid="61" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="163">
-   <animation>
-    <frame tileid="163" duration="150"/>
-    <frame tileid="164" duration="150"/>
-    <frame tileid="165" duration="150"/>
-    <frame tileid="123" duration="150"/>
-    <frame tileid="124" duration="150"/>
-    <frame tileid="125" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="382">
-   <animation>
-    <frame tileid="382" duration="150"/>
-    <frame tileid="385" duration="150"/>
-    <frame tileid="388" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="383">
-   <animation>
-    <frame tileid="383" duration="150"/>
-    <frame tileid="386" duration="150"/>
-    <frame tileid="389" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="384">
-   <animation>
-    <frame tileid="384" duration="150"/>
-    <frame tileid="387" duration="150"/>
-    <frame tileid="390" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="422">
-   <animation>
-    <frame tileid="422" duration="150"/>
-    <frame tileid="425" duration="150"/>
-    <frame tileid="428" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="423">
-   <animation>
-    <frame tileid="423" duration="150"/>
-    <frame tileid="426" duration="150"/>
-    <frame tileid="429" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="424">
-   <animation>
-    <frame tileid="424" duration="150"/>
-    <frame tileid="427" duration="150"/>
-    <frame tileid="430" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="462">
-   <animation>
-    <frame tileid="462" duration="150"/>
-    <frame tileid="465" duration="150"/>
-    <frame tileid="468" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="463">
-   <animation>
-    <frame tileid="463" duration="150"/>
-    <frame tileid="466" duration="150"/>
-    <frame tileid="469" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="464">
-   <animation>
-    <frame tileid="464" duration="150"/>
-    <frame tileid="467" duration="150"/>
-    <frame tileid="470" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="1163">
-   <animation>
-    <frame tileid="1163" duration="150"/>
-    <frame tileid="1165" duration="150"/>
-    <frame tileid="1167" duration="150"/>
-    <frame tileid="1169" duration="150"/>
-    <frame tileid="1171" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="1164">
-   <animation>
-    <frame tileid="1164" duration="150"/>
-    <frame tileid="1166" duration="150"/>
-    <frame tileid="1168" duration="150"/>
-    <frame tileid="1170" duration="150"/>
-    <frame tileid="1172" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="1203">
-   <animation>
-    <frame tileid="1203" duration="150"/>
-    <frame tileid="1205" duration="150"/>
-    <frame tileid="1207" duration="150"/>
-    <frame tileid="1209" duration="150"/>
-    <frame tileid="1211" duration="150"/>
-   </animation>
-  </tile>
-  <tile id="1204">
-   <animation>
-    <frame tileid="1204" duration="150"/>
-    <frame tileid="1206" duration="150"/>
-    <frame tileid="1208" duration="150"/>
-    <frame tileid="1210" duration="150"/>
-    <frame tileid="1212" duration="150"/>
-   </animation>
-  </tile>
- </tileset>
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="30">
+ <tileset firstgid="1" source="map/Overworld.tsx"/>
  <layer id="1" name="ground" width="64" height="64">
   <data encoding="base64" compression="zlib">
    eJztw0ENAAAMA6Grf9OTsQ8krJqqqqqqqqqqqqqqqqqqqqr6+gB+ABAB
@@ -171,23 +8,36 @@
  </layer>
  <layer id="3" name="background 2" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20MH6AAAAAAAAAAAAAAAAAAAACAtwFAAAAB
+   eJzt17ENwjAQQFHbJbABZAmUEZgCGIElYObQgwQSVJGJCBGX96RrfCnul0kJAAAAAAAAAAAAAP5HN3CuUxw7gk0eNk2e+vLvmHv/LtfPKWD/J9YB+xclpeVzLuXxdn57W5XXtxH7t6V/3wbvb/VX7/Xr169fv3794971K/rr9/rj9c/9/2d/7zv0zDF4/w3WbCek
   </data>
  </layer>
  <layer id="2" name="background 1" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJzt10EOwUAUgOGZpk7BZdo4jgvgChwCS+zYuQCW2NlxCVbepDNRDRFL7/1f8qL6Vn8HCecAAAAAAAAAAAAAAAAAAAAA4D90/G+jjfX+rv8+PcX988y5ZZx7Vt271e4tZNqK+0/Z593GV3uL/Vltr70/tYbzLn31WvjnXnt/kNrL2F4a6w+94XLjn88i7a30p2dQ+Ne9hf70nb8Y/fyH5mucwNLvf3CJZ5+6rfUHxZs+C/2j3Llx/nmvvX8l7WuZvrwfyAwbe+3953j2E5mpzKyx196ft6rrrcxOZt/Ya+4/1P7rvpuj8v4HJn9GOA==
+   eJzt1LERg0AMRcGjEbBxL8aY/lsBbBIUXEyqYW535uX6iUoBAAAAAAAAAAAAgHtaoy3asw9J0nelDNGjy74kR+v737F7ij6N7ocrv+hfO5JvyfCMvzDWXg3+iDk2f2tLg/sBAIB7OwH9kQoe
   </data>
  </layer>
  <layer id="4" name="foreground" width="64" height="64">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20MH6AAAAAAAAAAAAAAAAAAAACAtwFAAAAB
+   eJztz0ERACEMALE+intwA25OzIGKMkOiYDcCAAAAAAAAAAAAAAAAAADu0jNiZHVFnbnf18P/38PvR7bqAqr8SKUDfA==
   </data>
  </layer>
  <objectgroup id="9" name="collision">
   <object id="12" x="59" y="784">
-   <polyline points="0,0 -43,0 -43,224 69,224 69,0 25.8125,-0.0625"/>
+   <polyline points="3.82218,-0.00441576 -43,0 -43,224 69,224 69,0 22.0347,-0.0402778"/>
   </object>
+  <object id="13" x="58.5455" y="767.909">
+   <polyline points="4.43888,16.0832 4.47691,0.0894965 -58.5455,0.0909091 -58.5455,256.091 85.4545,256.091 85.4545,0.0909091 22.5256,0.213022 22.4545,16.0598"/>
+  </object>
+  <object id="18" x="25.9556" y="999">
+   <polyline points="0,0 -0.955556,0.0222222 -0.955556,-0.977778 -2.97778,-1 -2.93333,-0.111111 -3.93333,-0.0666667 -3.93333,-53.9556 -3.02222,-53.9556 -3.04444,-55.0667 -0.933333,-55 -0.933333,-54.2222 0.0222222,-54.0444 0.0444444,-0.311111"/>
+  </object>
+  <object id="19" x="0" y="1024">
+   <polyline points="0,0 1024,0 1024,-1024 0,-1024 0,-0.0585938"/>
+  </object>
+  <object id="20" x="83" y="699.625" width="142.875" height="40.125"/>
+  <object id="22" x="188.316" y="701.304" width="38.4111" height="94.249"/>
+  <object id="23" x="188.909" y="816.909" width="38.1818" height="206.727"/>
+  <object id="24" x="0.147727" y="699.216" width="60.5455" height="41.0909"/>
  </objectgroup>
  <objectgroup id="5" name="gameObjects"/>
  <objectgroup id="6" name="PlayerStartLocation">
